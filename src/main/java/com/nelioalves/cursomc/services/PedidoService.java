@@ -71,8 +71,9 @@ public class PedidoService {
 		
 		itemPedidoRepository.saveAll(obj.getItens()); // para salvar os itens do pedido
 		
-		//System.out.println(obj);
-		emailService.sendOrderConfirmationEmail(obj);
+		//System.out.println(obj);                        // para print obj via sysout
+		//emailService.sendOrderConfirmationEmail(obj);   // para enviar email com TEXTO PLANO
+		emailService.sendOrderConfirmationHtmlEmail(obj); // para enviar email com HTML
 		
 		return obj;
 	}
