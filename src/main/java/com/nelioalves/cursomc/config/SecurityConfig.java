@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -25,6 +26,7 @@ import com.nelioalves.cursomc.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -42,7 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private static final String[] PUBLIC_MATCHERS_GET = {			
 			"/produtos/**",
-			"/categorias/**",
+			"/categorias/**"
+	};
+	
+	private static final String[] PUBLIC_MATCHERS_POST = {			
 			"/clientes/**"
 	};
 	
@@ -57,8 +62,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		//habilita o corsConfigurationSource (método abaixo) e desabilita o CSRF (contra ataques), pois não estamos armazenando dados na sessão
 		http.cors().and().csrf().disable();
 		
-		// libera a autorização de acesso para as informações do array e para todo o resto exige a autenticação
+		// libera acesso de post para o PUBLIC_MATCHERS_POST e
+		// libera a autorização de acesso para as informações do array, para todo o resto exige a autenticação
 		http.authorizeRequests()
+			.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			.anyRequest().authenticated();
