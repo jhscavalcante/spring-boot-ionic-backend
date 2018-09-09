@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.nelioalves.cursomc.security.JWTAuthenticationFilter;
+import com.nelioalves.cursomc.security.JWTAuthorizationFilter;
 import com.nelioalves.cursomc.security.JWTUtil;
 
 @Configuration
@@ -62,7 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			.anyRequest().authenticated();
 		
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil)); // registra o interceptador da requisição
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil)); // registra o interceptador da requisição de autenticação
+		
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService)); // registra o interceptador da requisição de autorização
 		
 		// configuração necessária para assegurar que o backend não vá criar sessão de usuário
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
