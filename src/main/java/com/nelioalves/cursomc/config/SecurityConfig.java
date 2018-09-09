@@ -47,8 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/categorias/**"
 	};
 	
+	// liberado o POST para cadastro de um novo Cliente
+	// liberado o POST para envio de nova senha para o email
 	private static final String[] PUBLIC_MATCHERS_POST = {			
-			"/clientes/**"
+			"/clientes/**",
+			"/auth/forgot/**"
 	};
 	
 	@Override
