@@ -72,4 +72,8 @@ public class UserSS implements UserDetails {
 		return true;
 	}
 
+	public boolean hasRole(Perfil perfil) {
+		// testa se o usuário possui um dado perfil
+		return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+	}
 }
