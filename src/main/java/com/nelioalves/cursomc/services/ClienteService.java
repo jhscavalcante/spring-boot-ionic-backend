@@ -45,7 +45,7 @@ public class ClienteService {
 
 	public Cliente find(Integer id) {
 		
-		UserSS user = UserService.authenticated();
+		UserSS user = UserService.authenticated(); // p/ pegar o usuário que está logado
 		
 		if(user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso Negado");
@@ -123,7 +123,20 @@ public class ClienteService {
 		newObj.setEmail(obj.getEmail());
 	}
 	
-	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		return s3Service.uploadFile(multipartFile);
+	public URI uploadProfilePicture(MultipartFile multipartFile) {		
+		
+		UserSS user = UserService.authenticated(); // p/ pegar o usuário que está logado
+		
+		if(user == null) {
+			throw new AuthorizationException("Acesso Negado");
+		}
+		
+		URI uri = s3Service.uploadFile(multipartFile);
+		
+		Optional<Cliente> cli = repo.findById(user.getId());
+		cli.orElse(null).setImageUrl(uri.toString());
+		repo.save(cli.orElse(null));
+		
+		return uri;
 	}
 }

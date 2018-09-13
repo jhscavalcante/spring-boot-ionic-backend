@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	// liberado o POST para envio de nova senha para o email
 	private static final String[] PUBLIC_MATCHERS_POST = {			
 			"/clientes",
-			"/clientes/picture",
 			"/auth/forgot/**"
 	};
 	
