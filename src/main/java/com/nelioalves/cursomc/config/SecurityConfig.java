@@ -42,9 +42,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/h2-console/**"
 	};
 	
+	// liberado para ser utilizado sem o Header Authorization
 	private static final String[] PUBLIC_MATCHERS_GET = {			
 			"/produtos/**",
-			"/categorias/**"
+			"/categorias/**",
+			"/estados/**"
 	};
 	
 	// liberado o POST para cadastro de um novo Cliente
