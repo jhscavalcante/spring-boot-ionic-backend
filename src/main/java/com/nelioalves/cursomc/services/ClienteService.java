@@ -62,9 +62,9 @@ public class ClienteService {
 			throw new AuthorizationException("Acesso Negado");
 		}
 		
-		Optional<Cliente> obj = repo.findById(id);
+		Optional<Cliente> obj = repo.findById(user.getId());
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
-		"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
+		"Objeto não encontrado! Id: " + user.getId() + ", Tipo: " + Cliente.class.getName()));
 	}
 	
 	@Transactional
@@ -101,6 +101,25 @@ public class ClienteService {
 	
 	public List<Cliente> findAll(){
 		return repo.findAll();
+	}
+	
+	public Cliente findByEmail(String email) {
+		
+		UserSS user = UserService.authenticated(); // para pegar o usuário que está logado
+		
+		// se o usuário for nulo OU 
+		// se o perfil não for administrador E o email não for deste usuário
+		if(user == null || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso Negado");
+		}
+		
+		Cliente obj = repo.findByEmail(user.getUsername());
+		if (obj == null) {
+			throw new ObjectNotFoundException(
+					"Objeto não encontrado! Id: " + user.getId() + ", Tipo: " + Cliente.class.getName());
+		}
+		return obj;
+		
 	}
 	
 	public Cliente fromDTO(ClienteDTO objDto) {
